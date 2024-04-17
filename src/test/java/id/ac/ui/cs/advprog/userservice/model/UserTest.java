@@ -1,86 +1,43 @@
 package id.ac.ui.cs.advprog.userservice.model;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserTest {
 
-    private Register register;
-
-    @BeforeEach
-    public void setUp() {
-        register = new Register(new UserRepository());
-    }
-
     @Test
-    public void testRegisterUser_Success() {
+    public void testLogin_Success() {
         // Given
         String username = "testuser";
         String password = "password123";
         String role = "customer";
-        RegisterRequest registerRequest = new RegisterRequest(username, password, role);
+        User user = new User(username, password, role);
 
-        // When
-        User registeredUser = register.registerUser(registerRequest);
-
-        // Then
-        assertNotNull(registeredUser);
-        assertEquals(username, registeredUser.getUsername());
-        assertEquals(password, registeredUser.getPassword());
-        assertEquals(role, registeredUser.getRole());
+        // When/Then
+        assertTrue(user.login(username, password));
     }
 
     @Test
-    public void testRegisterUser_NullUsername() {
+    public void testLogin_Failure_WrongUsername() {
         // Given
+        String username = "testuser";
         String password = "password123";
         String role = "customer";
-        RegisterRequest registerRequest = new RegisterRequest(null, password, role);
+        User user = new User(username, password, role);
 
         // When/Then
-        assertThrows(IllegalArgumentException.class, () -> {
-            register.registerUser(registerRequest);
-        });
+        assertFalse(user.login("wrongusername", password));
     }
 
     @Test
-    public void testRegisterUser_NullPassword() {
+    public void testLogin_Failure_WrongPassword() {
         // Given
         String username = "testuser";
+        String password = "password123";
         String role = "customer";
-        RegisterRequest registerRequest = new RegisterRequest(username, null, role);
+        User user = new User(username, password, role);
 
         // When/Then
-        assertThrows(IllegalArgumentException.class, () -> {
-            register.registerUser(registerRequest);
-        });
-    }
-
-    @Test
-    public void testRegisterUser_NullRole() {
-        // Given
-        String username = "testuser";
-        String password = "password123";
-        RegisterRequest registerRequest = new RegisterRequest(username, password, null);
-
-        // When/Then
-        assertThrows(IllegalArgumentException.class, () -> {
-            register.registerUser(registerRequest);
-        });
-    }
-
-    @Test
-    public void testRegisterUser_InvalidRole() {
-        // Given
-        String username = "testuser";
-        String password = "password123";
-        String invalidRole = "invalid_role";
-        RegisterRequest registerRequest = new RegisterRequest(username, password, invalidRole);
-
-        // When/Then
-        assertThrows(IllegalArgumentException.class, () -> {
-            register.registerUser(registerRequest);
-        });
+        assertFalse(user.login(username, "wrongpassword"));
     }
 }
