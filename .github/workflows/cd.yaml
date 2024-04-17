@@ -26,17 +26,17 @@ jobs:
 
       - name: Build
         run: |
-          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/product-service:latest .
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/user-service:latest .
 
       - name: Push
         run: |
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/product-service:latest
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/user-service:latest
 
       - name: Deploy
         run: |
-          gcloud run deploy product-service \
+          gcloud run deploy user-service \
           --region europe-west1 \
-          --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/product-service \
+          --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/user-service \
           --platform managed \
           --allow-unauthenticated \
           --project ${{ secrets.GCP_PROJECT_ID }}
